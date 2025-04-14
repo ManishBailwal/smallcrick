@@ -2,19 +2,29 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebaseConfig'; // adjust path as per your project structure
+
+let onAuthStateChangedFunc = null;
+let authInstance = null;
+
+// Check if we are running in the browser before importing Firebase
+if (typeof window !== 'undefined') {
+  const { onAuthStateChanged } = require('firebase/auth');
+  const { auth } = require('../../lib/firebaseConfig');
+  onAuthStateChangedFunc = onAuthStateChanged;
+  authInstance = auth;
+}
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setIsLoggedIn(!!user);
-    });
-
-    return () => unsubscribe();
+    if (onAuthStateChangedFunc && authInstance) {
+      const unsubscribe = onAuthStateChangedFunc(authInstance, (user) => {
+        setIsLoggedIn(!!user);
+      });
+      return () => unsubscribe();
+    }
   }, []);
 
   return (
@@ -56,7 +66,7 @@ const Header = () => {
         <div className="md:hidden mt-3 space-y-2 px-4">
           <Link href="/" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Home</Link>
           <Link href="/allmatches" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Matches</Link>
-          <Link href="/prediction" className="hover:text-yellow-300 transition">Predict</Link>
+          <Link href="/prediction" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Predict</Link>
           <Link href="/about" className="block px-4 py-2 rounded hover:bg-blue-800 transition">About</Link>
           {isLoggedIn ? (
             <Link href="/userDashboard" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Dashboard</Link>
