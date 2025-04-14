@@ -18,12 +18,15 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const user = auth.currentUser;
-    if (user) {
-      setAdminEmail(user.email);
-    } else {
-      router.push('/login');
-    }
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setAdminEmail(user.email);
+      } else {
+        router.push('/login');
+      }
+    });
+  
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = async () => {
