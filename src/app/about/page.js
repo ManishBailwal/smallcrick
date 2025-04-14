@@ -59,7 +59,7 @@ const About = () => {
               <div className="border-l-4 border-[#F77F00] pl-6">
                 <h3 className="text-xl font-semibold text-white">📈 Machine Learning in Cricket</h3>
                 <p className="text-base mt-2 text-gray-300">
-                  We integrated ML predictions to bring data-driven insights to the game.
+                  We integrated ML predictions to bring data-driven insights to the game....
                 </p>
               </div>
             </div>
