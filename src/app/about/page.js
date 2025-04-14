@@ -69,7 +69,7 @@ const About = () => {
         {/* Call to Action */}
         <section className="bg-[#F77F00] text-white py-16 text-center px-4">
           <h2 className="text-3xl font-serif font-bold mb-4">Be a Part of the Legacy</h2>
-          <p className="mb-6 text-lg">Whether you're a player, an organizer, or a fan — SmallCrick is for you.</p>
+          <p className="mb-6 text-lg">Whether  you&apos;re a player, an organizer, or a fan — SmallCrick is for you.</p>
           <Link
             href="/register"
             className="inline-block bg-white text-[#F77F00] font-semibold px-6 py-3 rounded-full shadow hover:bg-yellow-100 transition"
