@@ -1,3 +1,5 @@
+"use client";
+
 // lib/firebaseConfig.js
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
