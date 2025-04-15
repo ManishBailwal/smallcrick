@@ -27,17 +27,15 @@ const Footer = () => {
               <Link href="/" className="hover:text-yellow-400 transition">🏠 Home</Link>
             </li>
             <li>
-              <Link href="/predict" className="hover:text-yellow-400 transition">🎯 Predictor</Link>
+              <Link href="/prediction" className="hover:text-yellow-400 transition">🎯 Predictor</Link>
             </li>
             <li>
-              <Link href="/matches" className="hover:text-yellow-400 transition">📅 Upcoming Matches</Link>
+              <Link href="/allmatches" className="hover:text-yellow-400 transition">📅 Upcoming Matches</Link>
             </li>
             <li>
               <Link href="/about" className="hover:text-yellow-400 transition">ℹ️ About Us</Link>
             </li>
-            <li>
-              <Link href="/contact" className="hover:text-yellow-400 transition">📨 Contact</Link>
-            </li>
+            
           </ul>
         </div>
 

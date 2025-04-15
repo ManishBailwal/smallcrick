@@ -72,7 +72,7 @@ export default function ApplicationsPanel({ matchId, onBack }) {
     <div className="text-white p-6">
       <button
         onClick={onBack}
-        className="mb-6 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded"
+        className="cursor-pointer mb-6 bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded"
       >
         ← Back to Matches
       </button>
@@ -97,19 +97,19 @@ export default function ApplicationsPanel({ matchId, onBack }) {
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() => handleStatusUpdate(app.id, 'Approved')}
-                  className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded"
+                  className="cursor-pointer bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded"
                 >
                   Approve
                 </button>
                 <button
                   onClick={() => handleStatusUpdate(app.id, 'Rejected')}
-                  className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
+                  className="cursor-pointer bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
                 >
                   Reject
                 </button>
                 <button
                   onClick={() => handleDelete(app.id)}
-                  className="bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded"
+                  className="cursor-pointer bg-gray-700 hover:bg-gray-800 text-white py-1 px-3 rounded"
                 >
                   Delete
                 </button>

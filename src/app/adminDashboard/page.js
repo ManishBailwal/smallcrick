@@ -59,7 +59,7 @@ export default function AdminDashboard() {
                 setShowApplications(false);
                 setSelectedMatchId(null); // Clear panel
               }}
-              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="cursor-pointer mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Post Match
             </button>
@@ -74,7 +74,7 @@ export default function AdminDashboard() {
                 setShowPostForm(false);
                 setSelectedMatchId(null); // Clear panel
               }}
-              className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+              className="cursor-pointer  mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
             >
               View Applications
             </button>

@@ -117,7 +117,7 @@ const PredictionForm = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#F77F00] text-white py-3 rounded-lg hover:bg-orange-600 transition"
+              className=" cursor-pointer w-full bg-[#F77F00] text-white py-3 rounded-lg hover:bg-orange-600 transition"
             >
               {loading ? 'Predicting...' : 'Predict'}
             </button>

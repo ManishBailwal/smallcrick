@@ -65,7 +65,7 @@ export default function MatchApplicationsList({ onSelectMatch }) {
                 <span className="font-semibold text-amber-200">Applications:</span> {match.applicationsCount}
               </p>
               <button
-                className="bg-amber-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-amber-500
+                className="cursor-pointer  bg-amber-400 text-black font-semibold py-2 px-4 rounded-lg hover:bg-amber-500
                 focus:outline-none focus:ring-2 focus:ring-amber-300 transition-all duration-200"
                 onClick={() => onSelectMatch(match.id)}
               >
