@@ -21,20 +21,24 @@ export default function ApplicationsPanel({ matchId, onBack }) {
   useEffect(() => {
     const fetchApplicationsAndMatch = async () => {
       try {
-        // Get match info
         const matchDocRef = doc(db, 'matches', matchId);
         const matchSnap = await getDoc(matchDocRef);
         if (matchSnap.exists()) {
           setMatchName(matchSnap.data().matchname || 'Unknown Match');
         }
 
-        // Get applications
         const q = query(collection(db, 'applications'), where('matchId', '==', matchId));
         const snapshot = await getDocs(q);
 
-        const apps = snapshot.docs.map(docSnap => ({
-          id: docSnap.id,
-          ...docSnap.data(),
+        const apps = await Promise.all(snapshot.docs.map(async (docSnap) => {
+          const data = docSnap.data();
+          const userDoc = await getDoc(doc(db, 'users', data.userId));
+          const userData = userDoc.exists() ? userDoc.data() : {};
+          return {
+            id: docSnap.id,
+            ...data,
+            userDetails: userData,
+          };
         }));
 
         setApplications(apps);
@@ -93,6 +97,18 @@ export default function ApplicationsPanel({ matchId, onBack }) {
             >
               <p><span className="text-amber-200">User ID:</span> {app.userId}</p>
               <p><span className="text-amber-200">Status:</span> {app.status}</p>
+              {app.userDetails && (
+                <div className="mt-2 space-y-1 text-sm text-white">
+                  <p><span className="text-amber-300">Name:</span> {app.userDetails.firstName} {app.userDetails.lastName}</p>
+                  <p><span className="text-amber-300">Phone:</span> {app.userDetails.phone}</p>
+                  <p><span className="text-amber-300">Age:</span> {app.userDetails.age}</p>
+                  <p><span className="text-amber-300">Role:</span> {app.userDetails.role}</p>
+                  <p><span className="text-amber-300">Batting Style:</span> {app.userDetails.battingStyle}</p>
+                  <p><span className="text-amber-300">Bowling Style:</span> {app.userDetails.bowlingStyle}</p>
+                  <p><span className="text-amber-300">Experience:</span> {app.userDetails.experience}</p>
+                  <p><span className="text-amber-300">City:</span> {app.userDetails.city}</p>
+                </div>
+              )}
 
               <div className="flex gap-2 mt-3">
                 <button

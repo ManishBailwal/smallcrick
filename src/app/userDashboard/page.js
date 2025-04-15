@@ -7,11 +7,13 @@ import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firesto
 import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ProfileCompletion from './ProfileCompletion';
 
 export default function UserDashboard() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [appliedMatches, setAppliedMatches] = useState([]);
+  const [showProfileForm, setShowProfileForm] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function UserDashboard() {
           const userInfo = userSnap.data();
           setUserData(userInfo);
 
-          // Fetch applications for the current user
+          // Fetch applications
           const appsRef = collection(db, 'applications');
           const q = query(appsRef, where('userId', '==', user.uid));
           const querySnapshot = await getDocs(q);
@@ -34,9 +36,7 @@ export default function UserDashboard() {
               const appData = docSnap.data();
               const matchRef = doc(db, 'matches', appData.matchId);
               const matchSnap = await getDoc(matchRef);
-
               const matchData = matchSnap.exists() ? matchSnap.data() : {};
-
               return {
                 id: docSnap.id,
                 applicationStatus: appData.status,
@@ -67,6 +67,11 @@ export default function UserDashboard() {
     router.push('/');
   };
 
+  const handleProfileUpdate = (updatedData) => {
+    setUserData(updatedData);
+    setShowProfileForm(false);
+  };
+
   if (loading) {
     return <div className="text-center mt-20 text-white">Loading your dashboard...</div>;
   }
@@ -77,14 +82,38 @@ export default function UserDashboard() {
       <div className="min-h-screen bg-gradient-to-br from-[#003049] via-[#002635] to-[#00141b] text-white p-6">
         <div className="max-w-4xl mx-auto bg-[#012a3a] border border-[#00405e] rounded-2xl shadow-xl p-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-amber-300">Welcome, {userData?.email}</h1>
-            <button
-              onClick={handleLogout}
-              className="cursor-pointer bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
-            >
-              Logout
-            </button>
+            <div className="flex items-center space-x-4">
+              {userData?.profileImage && (
+                <img
+                  src={userData.profileImage}
+                  alt="Profile"
+                  className="w-16 h-16 rounded-full border border-amber-300"
+                />
+              )}
+              <h1 className="text-3xl font-bold text-amber-300">Welcome, {userData?.firstName || userData?.email}</h1>
+            </div>
+            <div className="space-x-2">
+              <button
+                onClick={() => setShowProfileForm((prev) => !prev)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-md"
+              >
+                {showProfileForm ? 'Close Profile Form' : 'Edit Profile'}
+              </button>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded-md"
+              >
+                Logout
+              </button>
+            </div>
           </div>
+
+          {showProfileForm && (
+            <div className="my-6">
+              <ProfileCompletion userId={auth.currentUser.uid} onProfileUpdate={handleProfileUpdate} />
+            </div>
+          )}
+
           <p className="text-amber-100 mb-6">This is your personal user dashboard.</p>
 
           <h2 className="text-2xl text-amber-300 font-semibold mb-4">Applied Matches</h2>

@@ -1,31 +1,47 @@
 'use client';
+
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { doc, getDoc } from 'firebase/firestore';
 
 let onAuthStateChangedFunc = null;
 let authInstance = null;
+let dbInstance = null;
 
-// Check if we are running in the browser before importing Firebase
 if (typeof window !== 'undefined') {
   const { onAuthStateChanged } = require('firebase/auth');
-  const { auth } = require('../../lib/firebaseConfig');
+  const { auth, db } = require('../../lib/firebaseConfig');
   onAuthStateChangedFunc = onAuthStateChanged;
   authInstance = auth;
+  dbInstance = db;
 }
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     if (onAuthStateChangedFunc && authInstance) {
-      const unsubscribe = onAuthStateChangedFunc(authInstance, (user) => {
-        setIsLoggedIn(!!user);
+      const unsubscribe = onAuthStateChangedFunc(authInstance, async (user) => {
+        if (user) {
+          setIsLoggedIn(true);
+          const userDocRef = doc(dbInstance, 'users', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            setRole(userDoc.data().role); // 'admin' or 'user'
+          }
+        } else {
+          setIsLoggedIn(false);
+          setRole(null);
+        }
       });
       return () => unsubscribe();
     }
   }, []);
+
+  const dashboardLink = role === 'admin' ? '/adminDashboard' : '/userDashboard';
 
   return (
     <header className="w-full bg-gradient-to-r from-[#002a3a] to-[#001b29] text-white shadow-md py-4">
@@ -47,7 +63,7 @@ const Header = () => {
           <Link href="/prediction" className="hover:text-yellow-300 transition">Predict</Link>
           <Link href="/about" className="hover:text-yellow-300 transition">About</Link>
           {isLoggedIn ? (
-            <Link href="/userDashboard" className="hover:text-yellow-300 transition">Dashboard</Link>
+            <Link href={dashboardLink} className="hover:text-yellow-300 transition">Dashboard</Link>
           ) : (
             <Link href="/login" className="hover:text-yellow-300 transition">Login</Link>
           )}
@@ -61,7 +77,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Dropdown */}
+      {/* Mobile Dropdown */}
       {isOpen && (
         <div className="md:hidden mt-3 space-y-2 px-4">
           <Link href="/" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Home</Link>
@@ -69,7 +85,7 @@ const Header = () => {
           <Link href="/prediction" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Predict</Link>
           <Link href="/about" className="block px-4 py-2 rounded hover:bg-blue-800 transition">About</Link>
           {isLoggedIn ? (
-            <Link href="/userDashboard" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Dashboard</Link>
+            <Link href={dashboardLink} className="block px-4 py-2 rounded hover:bg-blue-800 transition">Dashboard</Link>
           ) : (
             <Link href="/login" className="block px-4 py-2 rounded hover:bg-blue-800 transition">Login</Link>
           )}
